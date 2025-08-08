@@ -1,56 +1,53 @@
 variable "aws_region" {
-  description = "AWS region"
   type        = string
-  default     = "ap-south-1"
+  description = "AWS region to deploy resources"
 }
 
 variable "instance_type" {
-  description = "EC2 instance type"
   type        = string
-  default     = "t3.medium"
+  default     = "t3.micro"
+  description = "EC2 instance type for Jenkins"
 }
 
 variable "key_name" {
-  description = "EC2 key pair name (must exist in region)"
   type        = string
+  description = "Name of the AWS key pair"
 }
 
 variable "github_repo_url" {
-  description = "HTTPS GitHub repo URL (public)"
   type        = string
+  description = "GitHub repository URL"
 }
 
 variable "github_token" {
-  description = "GitHub personal access token (used to create webhook)"
   type        = string
+  description = "GitHub Personal Access Token"
   sensitive   = true
 }
 
 variable "gmail_user" {
-  description = "Gmail address for notifications"
   type        = string
+  description = "Gmail username for Jenkins notifications"
 }
 
 variable "gmail_app_password" {
-  description = "Gmail App Password for SMTP"
   type        = string
+  description = "Gmail App password for Jenkins notifications"
   sensitive   = true
 }
 
 variable "jenkins_admin_user" {
-  description = "Jenkins admin username"
   type        = string
-  default     = "admin"
+  description = "Jenkins admin username"
 }
 
 variable "jenkins_admin_password" {
-  description = "Jenkins admin password"
   type        = string
+  description = "Jenkins admin password"
   sensitive   = true
 }
 
 variable "TF_VER" {
-  description = "Terraform version to install on Jenkins host"
   type        = string
-  default     = "1.6.0"
+  description = "Terraform version to install"
 }

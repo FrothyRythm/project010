@@ -1,65 +1,22 @@
 terraform {
+  required_version = ">= 1.6.0"
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
       version = "~> 6.0"
     }
   }
-  required_version = ">= 1.4.0"
 }
 
 provider "aws" {
   region = var.aws_region
 }
 
-# Get Amazon Linux 2 AMI for region
-data "aws_ami" "amazon_linux_2" {
-  most_recent = true
-  owners      = ["amazon"]
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
-  }
-}
-
-resource "aws_security_group" "jenkins_sg" {
-  name        = "jenkins-sg"
-  description = "Allow Jenkins & SSH"
-
-  ingress {
-    description = "Jenkins UI"
-    from_port   = 8080
-    to_port     = 8080
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    description = "SSH"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "jenkins-sg"
-  }
-}
-
-# Use templatefile() to pass variables into userdata
 resource "aws_instance" "jenkins" {
-  ami                    = data.aws_ami.amazon_linux_2.id
+  ami                    = "ami-0f5ee92e2d63afc18" # Example Amazon Linux 2 AMI in ap-south-1
   instance_type          = var.instance_type
   key_name               = var.key_name
-  vpc_security_group_ids = [aws_security_group.jenkins_sg.id]
   associate_public_ip_address = true
 
   user_data = templatefile("${path.module}/jenkins-userdata.sh.tpl", {
@@ -77,11 +34,13 @@ resource "aws_instance" "jenkins" {
   }
 }
 
-resource "aws_eip" "jenkins_eip" {
-  instance = aws_instance.jenkins.id
-  domain   = "vpc"
+output "jenkins_instance_ip" {
+  description = "Public IP address of the Jenkins EC2 instance"
+  value       = aws_instance.jenkins.public_ip
 }
 
 output "jenkins_url" {
-  value = "http://${aws_eip.jenkins_eip.public_ip}:8080"
+  description = "Jenkins web interface URL"
+  value       = "http://${aws_instance.jenkins.public_ip}:8080"
 }
+
