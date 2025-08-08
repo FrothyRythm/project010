@@ -1,25 +1,48 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
+
 provider "aws" {
-  region = "ap-south-1"
+  region = var.aws_region
 }
 
-resource "aws_key_pair" "jenkins_key" {
-  key_name   = "jenkins-key"
-  public_key = file("~/.ssh/id_rsa.pub")
+variable "aws_region" {
+  type    = string
+  default = "ap-south-1"
 }
 
+variable "key_name" {
+  type = string
+}
+
+variable "gmail_user" { type = string }
+variable "gmail_app_password" { type = string }
+variable "github_token" { type = string }
+variable "aws_access_key" { type = string }
+variable "aws_secret_key" { type = string }
+
+# Security group
 resource "aws_security_group" "jenkins_sg" {
-  name_prefix = "jenkins-sg-"
+  name        = "jenkins-sg"
+  description = "Allow Jenkins & SSH"
 
   ingress {
-    from_port   = 22
-    to_port     = 22
+    description = "Jenkins UI"
+    from_port   = 8080
+    to_port     = 8080
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-    from_port   = 8080
-    to_port     = 8080
+    description = "SSH"
+    from_port   = 22
+    to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -32,19 +55,34 @@ resource "aws_security_group" "jenkins_sg" {
   }
 }
 
-resource "aws_instance" "jenkins_server" {
-  ami           = "ami-0dee22c13ea7a9a67" # Ubuntu 22.04 in ap-south-1
-  instance_type = "t3.medium"
-  key_name      = aws_key_pair.jenkins_key.key_name
+# EC2 Instance for Jenkins
+resource "aws_instance" "jenkins" {
+  ami                    = "ami-0c42696027a8ede58" # Ubuntu 22.04 LTS (ap-south-1) — adjust if needed
+  instance_type          = "t3.medium"
+  key_name               = var.key_name
   vpc_security_group_ids = [aws_security_group.jenkins_sg.id]
 
-  user_data = file("jenkins-userdata.sh")
+  # user_data template receives secrets securely from local terraform variables
+  user_data = templatefile("${path.module}/jenkins-userdata.sh.tpl", {
+    gmail_user          = var.gmail_user,
+    gmail_app_password  = var.gmail_app_password,
+    github_token        = var.github_token,
+    aws_access_key      = var.aws_access_key,
+    aws_secret_key      = var.aws_secret_key,
+    github_repo         = "https://github.com/FrothyRythm/project010.git"
+  })
 
   tags = {
-    Name = "JenkinsServer"
+    Name = "Jenkins-Auto"
   }
 }
 
+# Elastic IP so you have stable URL
+resource "aws_eip" "jenkins_eip" {
+  instance = aws_instance.jenkins.id
+  domain   = "vpc"
+}
+
 output "jenkins_url" {
-  value = "http://${aws_instance.jenkins_server.public_ip}:8080"
+  value = "http://${aws_eip.jenkins_eip.public_ip}:8080"
 }
