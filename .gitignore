@@ -42,5 +42,7 @@ docker-compose.override.yml
 # Ignore specific files in the app directory
 app/dockerfile
 app/.env
+# Ignore Terraform variable filesgit terraform.tfstate
+terraform.tfstate.backup
+.terraform
 terraform.tfvars
-# Ignore Terraform variable files
