@@ -47,3 +47,7 @@ terraform.tfstate.backup
 .terraform
 *terraform.tfvars*
 terraform.tfvars
+terraform.tfvars
+*.auto.tfvars
+.terraform/
+.terraform.lock.hcl
