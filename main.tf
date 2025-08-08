@@ -1,15 +1,14 @@
 provider "aws" {
-  region = "ap-south-1" # Mumbai region, change if needed
+  region = "ap-south-1"
 }
 
 resource "aws_key_pair" "jenkins_key" {
   key_name   = "jenkins-key"
-  public_key = file("~/.ssh/id_rsa.pub") # Path to your public SSH key
+  public_key = file("~/.ssh/id_rsa.pub")
 }
 
 resource "aws_security_group" "jenkins_sg" {
-  name        = "jenkins-sg"
-  description = "Allow SSH and Jenkins"
+  name_prefix = "jenkins-sg-"
 
   ingress {
     from_port   = 22
@@ -34,20 +33,16 @@ resource "aws_security_group" "jenkins_sg" {
 }
 
 resource "aws_instance" "jenkins_server" {
-  ami           = "ami-0dee22c13ea7a9a67" # Ubuntu 22.04 LTS in ap-south-1, update if region changes
-  instance_type = "t3.micro"
+  ami           = "ami-0dee22c13ea7a9a67" # Ubuntu 22.04 in ap-south-1
+  instance_type = "t3.medium"
   key_name      = aws_key_pair.jenkins_key.key_name
-  security_groups = [aws_security_group.jenkins_sg.name]
+  vpc_security_group_ids = [aws_security_group.jenkins_sg.id]
 
   user_data = file("jenkins-userdata.sh")
 
   tags = {
-    Name = "Jenkins-Server"
+    Name = "JenkinsServer"
   }
-}
-
-output "jenkins_public_ip" {
-  value = aws_instance.jenkins_server.public_ip
 }
 
 output "jenkins_url" {
