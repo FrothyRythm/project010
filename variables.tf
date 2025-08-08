@@ -5,7 +5,7 @@ variable "aws_region" {
 }
 
 variable "key_name" {
-  description = "Existing EC2 key pair name"
+  description = "testkey"
   type        = string
 }
 
