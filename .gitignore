@@ -46,3 +46,4 @@ app/.env
 terraform.tfstate.backup
 .terraform
 *terraform.tfvars*
+terraform.tfvars
