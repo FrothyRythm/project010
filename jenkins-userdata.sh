@@ -115,11 +115,11 @@ import jenkins.model.Jenkins
 import hudson.tasks.Mailer
 
 // -- EDIT THE VALUES BELOW to match your SMTP server --
-def smtpHost = "smtp.example.com"
+def smtpHost = "smtp.gmail.com" 
 def smtpPort = "587"
-def smtpUser = "smtp-user"
-def smtpPassword = "smtp-pass"
-def adminEmail = "admin@example.com" // change to your admin e-mail
+def smtpUser = "kshitijsinha1002@gmail.com" 
+def smtpPassword = "hjsh udio qaih zbdr"
+def adminEmail = "kshitijsinha1002@gmail.com" 
 
 def inst = Jenkins.instance
 inst.getDescriptorByType(hudson.tasks.Mailer.DescriptorImpl.class).setSmtpHost(smtpHost)

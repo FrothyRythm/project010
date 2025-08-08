@@ -9,7 +9,7 @@ variable "key_name" {
 
 variable "admin_email" {
   type    = string
-  default = "admin@example.com" # change to your e-mail
+  default = "kshitijsinha1002@gmail.com" # change to your e-mail
 }
 
 resource "aws_security_group" "technova_sg" {
