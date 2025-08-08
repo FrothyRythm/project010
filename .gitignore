@@ -56,3 +56,7 @@ terraform.tfvars
 *.auto.tfvars
 .terraform/
 .terraform.lock.hcl
+terraform.tfvars
+*.auto.tfvars
+.terraform/
+.terraform.lock.hcl
