@@ -32,7 +32,9 @@ NovaProject/
 ├── main.tf                 # Terraform file to create AWS EC2
 ├── terraform.tfvars        # Terraform variables file
 └── variables.tf            # Terraform variables definition
-│── Jenkinsfile           # Jenkins pipeline configuration
+│── Jenkinsfile             # Jenkins pipeline configuration
+|── jenkins-userdata.sh     # Bash script to install Jenkins, configure plugins, create admin user
+
 ```
 
 ---
