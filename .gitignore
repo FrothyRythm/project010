@@ -2,3 +2,43 @@
 **/.terraform.*/
 **/*.tfstate
 **/*.tfstate.backup
+.terraform.tfstate
+.terraform.tfstate.backup
+# Ignore local .terraform directories
+# Ignore Terraform state files
+# Ignore Terraform plan files
+**/.terraform.lock.hcl
+# Ignore Terraform lock files
+# Ignore local .terraform directories
+# Ignore node_modules directories
+node_modules/
+# Ignore npm debug logs
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+# Ignore logs
+logs/
+*.log
+# Ignore environment files
+.env
+# Ignore coverage reports
+coverage/
+# Ignore build directories
+build/
+# Ignore dist directories
+dist/
+# Ignore temporary files
+tmp/
+# Ignore IDE specific files
+.idea/
+.vscode/
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+# Ignore Docker related files
+docker-compose.override.yml
+# Ignore Dockerfile
+docker-compose.override.yml
+# Ignore specific files in the app directory
+app/dockerfile
+app/.env
