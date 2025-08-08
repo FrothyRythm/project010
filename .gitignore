@@ -52,3 +52,7 @@ terraform.tfvars
 .terraform/
 .terraform.lock.hcl
 .env
+terraform.tfvars
+*.auto.tfvars
+.terraform/
+.terraform.lock.hcl
