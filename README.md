@@ -1,5 +1,5 @@
 
-# NovaProject - Automated Deployment Pipeline (Beginner Friendly)
+# NovaProject - Automated Deployment Pipeline 
 
 This project is called **NovaProject**. It is a beginner-friendly DevOps setup that helps you **automatically build, test, and deploy** a web application using **GitHub, Docker, Jenkins, Terraform, and AWS EC2**.
 
