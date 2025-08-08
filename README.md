@@ -1,4 +1,3 @@
-
 # NovaProject - Automated Deployment Pipeline 
 
 This project is called **NovaProject**. It is a beginner-friendly DevOps setup that helps you **automatically build, test, and deploy** a web application using **GitHub, Docker, Jenkins, Terraform, and AWS EC2**.
@@ -18,21 +17,22 @@ The goal is to make deployment **automatic and easy**, so you don’t need to do
 
 ## 📂 Project Structure
 ```
-NovaProject/
+project010/
 │
 ├── app/                   # Application source code
-├── node_modules/          # Node.js dependencies
-├── Dockerfile              # Instructions to build the Docker image
-├── index.js                # Main application file
-├── package.json            # Project dependencies
-├── package-lock.json       # Locked versions of dependencies
+└── node_modules/          # Node.js dependencies 
+└── Dockerfile              # Instructions to build the Docker image
+└── index.js                # Main application file
+└── package.json            # Project dependencies
+└── package-lock.json       # Locked versions of dependencies
 ├── .gitignore              # Files to ignore in Git
 ├── README.md               # Project documentation
 ├── destroy.bat             # Script to destroy AWS resources (Windows)
 ├── main.tf                 # Terraform file to create AWS EC2
 ├── terraform.tfvars        # Terraform variables file
-└── variables.tf            # Terraform variables definition
+│── variables.tf            # Terraform variables definition
 │── Jenkinsfile             # Jenkins pipeline configuration
+│── init-job.groovy         # Define pipeline job
 |── jenkins-userdata.sh     # Bash script to install Jenkins, configure plugins, create admin user
 
 ```
