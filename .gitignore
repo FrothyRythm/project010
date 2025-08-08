@@ -45,4 +45,4 @@ app/.env
 # Ignore Terraform variable filesgit terraform.tfstate
 terraform.tfstate.backup
 .terraform
-terraform.tfvars
+*terraform.tfvars*
