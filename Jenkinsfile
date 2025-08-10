@@ -3,7 +3,7 @@ pipeline {
 
   environment {
     IMAGE_NAME = "technova-node-app"
-    ADMIN_EMAIL = "admin@example.com" // change to your admin e-mail
+    ADMIN_EMAIL = "kshitijsinha1002@gmail.com" // change to your admin e-mail
   }
 
   stages {
@@ -34,7 +34,6 @@ pipeline {
 
     stage('Deploy') {
       steps {
-        // Stop existing container if exists, remove, then run new container
         sh '''
         if docker ps -q --filter "name=technova_app" | grep -q .; then
           docker stop technova_app || true

@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-# Variables from Terraform
 GITHUB_REPO_URL="${github_repo_url}"
 GITHUB_TOKEN="${github_token}"
 GMAIL_USER="${gmail_user}"
@@ -10,29 +9,24 @@ JENKINS_USER="${jenkins_admin_user}"
 JENKINS_PASS="${jenkins_admin_password}"
 TF_VER="${TF_VER}"
 
-# Update and install dependencies
 yum update -y
 amazon-linux-extras enable java-openjdk11
 yum install -y java-11-openjdk git wget unzip jq
 
-# Install Terraform
 wget https://releases.hashicorp.com/terraform/${TF_VER}/terraform_${TF_VER}_linux_amd64.zip
 unzip terraform_${TF_VER}_linux_amd64.zip
 mv terraform /usr/local/bin/
 chmod +x /usr/local/bin/terraform
 
-# Install Jenkins
 wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
 rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
 yum install -y jenkins
 systemctl enable jenkins
 systemctl start jenkins
 
-# Wait for Jenkins to start
 echo "Waiting for Jenkins to start..."
 sleep 40
 
-# Create Groovy script for admin user (Terraform injects values directly)
 mkdir -p /var/lib/jenkins/init.groovy.d
 cat <<EOF > /var/lib/jenkins/init.groovy.d/basic-security.groovy
 import jenkins.model.*
@@ -49,11 +43,9 @@ EOF
 
 chown -R jenkins:jenkins /var/lib/jenkins/init.groovy.d
 
-# Restart Jenkins to apply security changes
 systemctl restart jenkins
 sleep 40
 
-# Create Jenkins job via Job DSL
 mkdir -p /var/lib/jenkins/jobs/AutoPipeline
 cat <<EOF > /var/lib/jenkins/jobs/AutoPipeline/config.xml
 <?xml version='1.1' encoding='UTF-8'?>
@@ -86,7 +78,6 @@ EOF
 
 chown -R jenkins:jenkins /var/lib/jenkins/jobs
 
-# Configure email notification
 cat <<EOF > /var/lib/jenkins/hudson.tasks.Mailer.xml
 <?xml version='1.1' encoding='UTF-8'?>
 <hudson.tasks.Mailer_-DescriptorImpl>
@@ -100,5 +91,4 @@ EOF
 
 chown jenkins:jenkins /var/lib/jenkins/hudson.tasks.Mailer.xml
 
-# Restart Jenkins one last time
 systemctl restart jenkins

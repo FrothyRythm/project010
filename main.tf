@@ -14,7 +14,7 @@ provider "aws" {
 }
 
 resource "aws_instance" "jenkins" {
-  ami                    = "ami-0f5ee92e2d63afc18" # Example Amazon Linux 2 AMI in ap-south-1
+  ami                    = "ami-0f5ee92e2d63afc18" 
   instance_type          = var.instance_type
   key_name               = var.key_name
   associate_public_ip_address = true
