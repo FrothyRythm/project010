@@ -1,9 +1,10 @@
-NovaProject – Automated Deployment Pipeline
+# NovaProject – Automated Deployment Pipeline
 NovaProject is a beginner-friendly DevOps project that automates the process of building, testing, and deploying a web application using GitHub, Docker, Jenkins, Terraform, and AWS EC2.
 
 The aim is to make deployment fully automated so that whenever code is updated in GitHub, it gets deployed to AWS without manual work.
 
-🚀 What the Project Does
+**🚀 What the Project Does**
+
 Version Control – Stores and manages application code in GitHub.
 
 Containerization – Packages the app into a Docker image so it runs identically everywhere.
@@ -16,10 +17,8 @@ Automated Deployment – Deploys Docker containers to EC2.
 
 Notifications – Sends email updates after successful pipeline execution.
 
-📂 Project Structure
-perl
-Copy
-Edit
+**📂 Project Structure**
+
 project010/
 ├── app/                   # Application source code
 ├── node_modules/          # Node.js dependencies
@@ -37,14 +36,15 @@ project010/
 ├── jenkins-userdata.sh    # Jenkins setup/configuration script
 └── destroy.bat            # Script to destroy AWS resources (Windows)
 
-🛠 Step-by-Step Implementation
+**🛠 Step-by-Step Implementation**
 
-1️⃣ Instance Creation with Terraform
+**1️⃣ Instance Creation with Terraform**
 We used Terraform to provision an AWS EC2 instance. This happens right after pushing code changes to GitHub.
 
 <img width="859" height="354" alt="image" src="https://github.com/user-attachments/assets/a1e1974c-190c-4a16-b3e0-a97d12be7f08" />
 
-2️⃣ Jenkins Setup & Configuration
+
+**2️⃣ Jenkins Setup & Configuration**
 When the EC2 instance boots, it runs jenkins-userdata.sh which:
 
 Installs Jenkins
@@ -64,7 +64,7 @@ sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sour
 sudo apt update -y
 sudo apt install -y jenkins
 
-3️⃣ Jenkins Pipeline Execution
+**3️⃣ Jenkins Pipeline Execution**
 
 The Jenkinsfile defines the following stages:
 
@@ -100,24 +100,27 @@ pipeline {
 
 <img width="1192" height="967" alt="image" src="https://github.com/user-attachments/assets/3f436445-922a-47bd-b21d-0dcafe50e75d" /> <img width="342" height="347" alt="image" src="https://github.com/user-attachments/assets/e1e83737-45ea-441b-91e3-b42b9e39cad1" />
 
-4️⃣ Email Notifications
+
+**4️⃣ Email Notifications**
 After the pipeline runs successfully, Jenkins sends an email notification to the team.
 
 <img width="777" height="239" alt="image" src="https://github.com/user-attachments/assets/c5d42240-c623-4224-850c-8e82ba4fa0ee" />
 
-5️⃣ Application Deployment to EC2
+**5️⃣ Application Deployment to EC2**
 Once the pipeline finishes, the application is live and running in a Docker container on AWS EC2.
 
 
-📊 Data Flow Diagram
+**📊 Data Flow Diagram**
 
 <img width="892" height="555" alt="image" src="https://github.com/user-attachments/assets/b75dd05d-ed9c-411e-983d-7e29c1e966d7" />
+
 
 🗑 Destroying Resources
 To avoid AWS charges, destroy all created resources using:
 terraform destroy -auto-approve
 
-👨‍💻 Contributors
+
+**👨‍💻 Contributors**
 
 Kshitij – Terraform setup, AWS EC2 configuration, Jenkins automation
 
