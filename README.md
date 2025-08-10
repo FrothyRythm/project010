@@ -19,22 +19,10 @@ Notifications – Sends email updates after successful pipeline execution.
 
 **📂 Project Structure**
 
-project010/
-├── app/                   # Application source code
-├── node_modules/          # Node.js dependencies
-├── Dockerfile             # Docker image build instructions
-├── index.js               # Main application file
-├── package.json           # Project dependencies
-├── package-lock.json      # Locked dependency versions
-├── .gitignore             # Ignored files
-├── README.md              # Project documentation
-├── main.tf                # Terraform configuration for EC2
-├── terraform.tfvars       # Terraform variables
-├── variables.tf           # Terraform variable definitions
-├── Jenkinsfile            # Jenkins pipeline configuration
-├── init-job.groovy        # Jenkins job creation script
-├── jenkins-userdata.sh    # Jenkins setup/configuration script
-└── destroy.bat            # Script to destroy AWS resources (Windows)
+<img width="547" height="406" alt="image" src="https://github.com/user-attachments/assets/1942beac-1fff-4552-a26f-b81a14a34634" />
+
+
+
 
 **🛠 Step-by-Step Implementation**
 
