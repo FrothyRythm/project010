@@ -1,120 +1,128 @@
-# NovaProject - Automated Deployment Pipeline 
+NovaProject – Automated Deployment Pipeline
+NovaProject is a beginner-friendly DevOps project that automates the process of building, testing, and deploying a web application using GitHub, Docker, Jenkins, Terraform, and AWS EC2.
 
-This project is called **NovaProject**. It is a beginner-friendly DevOps setup that helps you **automatically build, test, and deploy** a web application using **GitHub, Docker, Jenkins, Terraform, and AWS EC2**.
+The aim is to make deployment fully automated so that whenever code is updated in GitHub, it gets deployed to AWS without manual work.
 
-The goal is to make deployment **automatic and easy**, so you don’t need to do manual work every time you change your code.
+🚀 What the Project Does
+Version Control – Stores and manages application code in GitHub.
 
----
+Containerization – Packages the app into a Docker image so it runs identically everywhere.
 
-##  What This Project Does
-- Stores code in **GitHub** (version control).
-- Packages the application in **Docker** (runs the same everywhere).
-- Uses **Jenkins** to build and deploy automatically.
-- Uses **Terraform** to create AWS EC2 servers automatically.
-- Deploys your app to **AWS EC2**.
+CI/CD Automation – Uses Jenkins to build, test, and deploy automatically.
 
----
+Infrastructure as Code (IaC) – Uses Terraform to create and configure AWS EC2 instances.
 
-## 📂 Project Structure
-```
+Automated Deployment – Deploys Docker containers to EC2.
+
+Notifications – Sends email updates after successful pipeline execution.
+
+📂 Project Structure
+perl
+Copy
+Edit
 project010/
-│
 ├── app/                   # Application source code
-└── node_modules/          # Node.js dependencies 
-└── Dockerfile              # Instructions to build the Docker image
-└── index.js                # Main application file
-└── package.json            # Project dependencies
-└── package-lock.json       # Locked versions of dependencies
-├── .gitignore              # Files to ignore in Git
-├── README.md               # Project documentation
-├── destroy.bat             # Script to destroy AWS resources (Windows)
-├── main.tf                 # Terraform file to create AWS EC2
-├── terraform.tfvars        # Terraform variables file
-│── variables.tf            # Terraform variables definition
-│── Jenkinsfile             # Jenkins pipeline configuration
-│── init-job.groovy         # Define pipeline job
-|── jenkins-userdata.sh     # Bash script to install Jenkins, configure plugins, create admin user
+├── node_modules/          # Node.js dependencies
+├── Dockerfile             # Docker image build instructions
+├── index.js               # Main application file
+├── package.json           # Project dependencies
+├── package-lock.json      # Locked dependency versions
+├── .gitignore             # Ignored files
+├── README.md              # Project documentation
+├── main.tf                # Terraform configuration for EC2
+├── terraform.tfvars       # Terraform variables
+├── variables.tf           # Terraform variable definitions
+├── Jenkinsfile            # Jenkins pipeline configuration
+├── init-job.groovy        # Jenkins job creation script
+├── jenkins-userdata.sh    # Jenkins setup/configuration script
+└── destroy.bat            # Script to destroy AWS resources (Windows)
 
-```
+🛠 Step-by-Step Implementation
 
----
+1️⃣ Instance Creation with Terraform
+We used Terraform to provision an AWS EC2 instance. This happens right after pushing code changes to GitHub.
 
-##  Step-by-Step Setup
+<img width="859" height="354" alt="image" src="https://github.com/user-attachments/assets/a1e1974c-190c-4a16-b3e0-a97d12be7f08" />
 
-### 1️⃣ Install Required Tools
-Make sure you have installed:
-- [Git](https://git-scm.com/)
-- [Node.js](https://nodejs.org/)
-- [Docker](https://www.docker.com/)
-- [Terraform](https://developer.hashicorp.com/terraform/downloads)
-- [Jenkins](https://www.jenkins.io/)
-- [AWS account](https://eu-north-1.signin.aws.amazon.com/oauth?client_id=arn%3Aaws%3Asignin%3A%3A%3Aconsole%2Fcanvas&code_challenge=l06EnnMA5qIlH7T0J-ZdLXdFO81-OjgJUPp85lCoyTQ&code_challenge_method=SHA-256&response_type=code&redirect_uri=https%3A%2F%2Fconsole.aws.amazon.com%2Fconsole%2Fhome%3FhashArgs%3D%2523%26isauthcode%3Dtrue%26nc2%3Dh_si%26src%3Dheader-signin%26state%3DhashArgsFromTB_eu-north-1_1c5d3e91dfa59701)
+2️⃣ Jenkins Setup & Configuration
+When the EC2 instance boots, it runs jenkins-userdata.sh which:
 
----
+Installs Jenkins
 
-### 2️⃣ Clone This Repository
-```bash
-git clone https://github.com/your-username/NovaProject.git
-cd NovaProject
-```
+Installs required plugins
 
----
+Creates an admin user
 
-### 3️⃣ Run the App Locally
-```bash
-npm install
-node index.js
-```
-Check: Open your browser and go to `http://localhost:3000`.
+Runs init-job.groovy to create a pipeline job automatically
 
----
+Code Snippet (jenkins-userdata.sh):
+#!/bin/bash
+sudo apt update -y
+sudo apt install -y openjdk-11-jdk
+wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
+sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+sudo apt update -y
+sudo apt install -y jenkins
 
-### 4️⃣ Build Docker Image
-```bash
-docker build -t novaproject .
-docker run -p 3000:3000 novaproject
-```
+3️⃣ Jenkins Pipeline Execution
 
----
+The Jenkinsfile defines the following stages:
 
-### 5️⃣ Create AWS EC2 with Terraform
-```bash
-terraform init
-terraform apply -auto-approve
-```
+Pull latest code from GitHub
 
----
+Build Docker image
 
-### 6️⃣ Setup Jenkins Credentials
-1. Open Jenkins Dashboard → Manage Jenkins → Credentials → (Global)
-2. Add:
-   - **GitHub Token** (Kind: Secret text)
-   - **DockerHub Username/Password**
-   - **AWS Access & Secret Keys**
+Push image to DockerHub
 
----
+Deploy container on EC2
 
-### 7️⃣ Create Jenkins Pipeline
-1. In Jenkins, create a **Pipeline Job**.
-2. Connect to your GitHub repository.
-3. Use `Jenkinsfile` to define pipeline stages.
+Send email notification
 
----
+Code Snippet (Jenkinsfile extract):
+pipeline {
+    agent any
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t my-docker-image .'
+            }
+        }
+        stage('Push to DockerHub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                    sh 'docker login -u $USER -p $PASS'
+                    sh 'docker push my-docker-image'
+                }
+            }
+        }
+    }
+}
 
-### 8️⃣ Deploy to AWS EC2
-Jenkins will automatically deploy the Docker container to your AWS EC2 instance.
+<img width="1192" height="967" alt="image" src="https://github.com/user-attachments/assets/3f436445-922a-47bd-b21d-0dcafe50e75d" /> <img width="342" height="347" alt="image" src="https://github.com/user-attachments/assets/e1e83737-45ea-441b-91e3-b42b9e39cad1" />
 
----
+4️⃣ Email Notifications
+After the pipeline runs successfully, Jenkins sends an email notification to the team.
 
-## 🗑 Destroy Resources
-When done, destroy EC2 to avoid costs:
-```bash
+<img width="777" height="239" alt="image" src="https://github.com/user-attachments/assets/c5d42240-c623-4224-850c-8e82ba4fa0ee" />
+
+5️⃣ Application Deployment to EC2
+Once the pipeline finishes, the application is live and running in a Docker container on AWS EC2.
+
+
+📊 Data Flow Diagram
+
+<img width="892" height="555" alt="image" src="https://github.com/user-attachments/assets/b75dd05d-ed9c-411e-983d-7e29c1e966d7" />
+
+🗑 Destroying Resources
+To avoid AWS charges, destroy all created resources using:
 terraform destroy -auto-approve
-```
 
----
+👨‍💻 Contributors
 
-## Author
-**Kshitij**  – AWS EC2 & Terraform setup, Docker, Jenkins CI/CD 
+Kshitij – Terraform setup, AWS EC2 configuration, Jenkins automation
 
----
+Vishal – Jenkins pipeline implementation
+
+Shreya – Docker setup, documentation & README organization
+
+Teesha – Application development, GitHub management
